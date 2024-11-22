@@ -60,20 +60,7 @@ export default function SpinWheel({ word, onHintRevealed }) {
       .style("stroke", "white")
       .style("stroke-width", "2")
 
-    // Segment labels
-    arcs.append("text")
-      .attr("transform", d => {
-        const pos = arc.centroid(d)
-        const midAngle = (d.startAngle + d.endAngle) / 2
-        return `translate(${pos[0]},${pos[1]}) rotate(${midAngle * 180 / Math.PI - 90})`
-      })
-      .attr("dy", ".35em")
-      .attr("text-anchor", "middle")
-      .text(d => d.data.label)
-      .style("fill", "white")
-      .style("font-size", `${size/25}px`)
-      .style("font-weight", "bold")
-
+   
     // Center spin button
     wheelGroup.append("circle")
       .attr("cx", 0)
@@ -94,10 +81,11 @@ export default function SpinWheel({ word, onHintRevealed }) {
       .style("font-weight", "bold")
       .style("cursor", "pointer")
 
-    // Pointer
-    svg.append("path")
-      .attr("d", `M${size-60},${size/2-15}L${size-30},${size/2}L${size-60},${size/2+15}Z`)
+      // Pointer (horizontally inverted)
+      svg.append("path")
+      .attr("d", `M${30},${size/2-15}L${60},${size/2}L${30},${size/2+15}Z`)
       .style("fill", "#333")
+
 
     function spin() {
       const rotation = 1440 + Math.random() * 1440
