@@ -1,14 +1,14 @@
 'use client'
 
-export default function Keyboard({ onGuess, guessedLetters }) {
+export default function Keyboard({ onGuess, guessedLetters, disabled }) {
   return (
     <div className="grid grid-cols-7 gap-2">
       {Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').map((letter) => (
         <button
           key={letter}
           onClick={() => onGuess(letter)}
-          disabled={guessedLetters.includes(letter)}
-          className="p-2 border rounded hover:bg-gray-100 disabled:opacity-50"
+          disabled={disabled || guessedLetters.includes(letter)}
+          className="p-2 border rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {letter}
         </button>

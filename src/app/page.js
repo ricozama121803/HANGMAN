@@ -92,8 +92,13 @@ export default function HangmanGame() {
       )}
       
       <div className="w-full max-w-md px-2 sm:px-0">
-        <Keyboard onGuess={handleGuess} guessedLetters={guessedLetters} />
-      </div>
+  <Keyboard 
+    onGuess={handleGuess} 
+    guessedLetters={guessedLetters}
+    disabled={remainingGuesses <= 0} 
+  />
+</div>
+
 
       <div className="flex gap-4">
         <button 
