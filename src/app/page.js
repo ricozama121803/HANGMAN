@@ -8,6 +8,14 @@ import Judge from '@/components/Judge'
 import SpinWheel from '@/components/SpinWheel'
 import HintModal from '@/components/HintModal'
 import { getRandomWord } from '@/data/wordData'
+import Marquee from '@/components/Marquee'
+
+
+const getInitialGuesses = (wordLength) => {
+  if (wordLength <= 5) return 4
+  if (wordLength <= 8) return 6
+  return 8
+}
 
 export default function HangmanGame() {
   const [word, setWord] = useState('')
@@ -21,6 +29,7 @@ export default function HangmanGame() {
   useEffect(() => {
     const initialWord = getRandomWord()
     setWord(initialWord)
+    setRemainingGuesses(getInitialGuesses(initialWord.length))
     setRotations(new Array(initialWord.length).fill(0))
   }, [])
 
@@ -28,7 +37,7 @@ export default function HangmanGame() {
     const newWord = getRandomWord()
     setWord(newWord)
     setGuessedLetters([])
-    setRemainingGuesses(6)
+    setRemainingGuesses(getInitialGuesses(newWord.length))
     setRotations(new Array(newWord.length).fill(0))
     setIsComplete(false)
     setShowSpinWheel(true)
@@ -74,7 +83,13 @@ export default function HangmanGame() {
         ))}
       </div>
 
-      <div className="mb-4 text-sm sm:text-base">Remaining Guesses: {remainingGuesses}</div>
+      {remainingGuesses <= 0 ? (
+        <Marquee />
+      ) : (
+        <div className="mb-4 text-sm sm:text-base">
+          Remaining Guesses: {remainingGuesses}
+        </div>
+      )}
       
       <div className="w-full max-w-md px-2 sm:px-0">
         <Keyboard onGuess={handleGuess} guessedLetters={guessedLetters} />
@@ -114,4 +129,5 @@ export default function HangmanGame() {
       <Judge isComplete={isComplete} remainingGuesses={remainingGuesses} />
     </main>
   )
+
 }
