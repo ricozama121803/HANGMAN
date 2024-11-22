@@ -1,23 +1,22 @@
 'use client'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useTrail } from '@react-spring/web'
 import Letter from '@/components/Letter'
 import Keyboard from '@/components/Keyboard'
 import Celebration from '@/components/Celebration'
 import Judge from '@/components/Judge'
+import SpinWheel from '@/components/SpinWheel'
+import HintModal from '@/components/HintModal'
+import { getRandomWord } from '@/data/wordData'
 
 export default function HangmanGame() {
-  const wordList = ['NEXTJS', 'REACT', 'JAVASCRIPT', 'TYPESCRIPT', 'TAILWIND']
-  
-  const getRandomWord = () => {
-    return wordList[Math.floor(Math.random() * wordList.length)]
-  }
-
   const [word, setWord] = useState('')
   const [guessedLetters, setGuessedLetters] = useState([])
   const [remainingGuesses, setRemainingGuesses] = useState(6)
   const [rotations, setRotations] = useState([])
   const [isComplete, setIsComplete] = useState(false)
+  const [showSpinWheel, setShowSpinWheel] = useState(true)
+  const [showHint, setShowHint] = useState(false)
   
   useEffect(() => {
     const initialWord = getRandomWord()
@@ -32,6 +31,7 @@ export default function HangmanGame() {
     setRemainingGuesses(6)
     setRotations(new Array(newWord.length).fill(0))
     setIsComplete(false)
+    setShowSpinWheel(true)
   }
 
   const handleGuess = (letter) => {
@@ -63,9 +63,14 @@ export default function HangmanGame() {
     <main className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 font-mono">
       <h1 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-8">Hangman Game</h1>
       
-      <div className="flex flex-wrap justify-center gap-1 sm:gap-2 mb-4 sm:mb-8">
+      <div className="flex flex-row justify-center gap-1 sm:gap-2 mb-4 sm:mb-8">
         {word.split('').map((letter, i) => (
-          <Letter key={i} rotateX={rotations[i]} letter={letter} />
+          <Letter
+            key={i}
+            rotateX={rotations[i]}
+            letter={letter}
+            size={word.length > 6 ? 'h-8 w-8 sm:h-12 sm:w-12' : 'h-12 w-12 sm:h-16 sm:w-16'}
+          />
         ))}
       </div>
 
@@ -75,12 +80,35 @@ export default function HangmanGame() {
         <Keyboard onGuess={handleGuess} guessedLetters={guessedLetters} />
       </div>
 
-      <button 
-        onClick={handleNewWord}
-        className="mt-6 sm:mt-8 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:bg-blue-700 transition-colors text-sm sm:text-base"
-      >
-        New Word
-      </button>
+      <div className="flex gap-4">
+        <button 
+          onClick={handleNewWord}
+          className="mt-6 sm:mt-8 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:bg-blue-700 transition-colors text-sm sm:text-base"
+        >
+          New Word
+        </button>
+
+        <button 
+          onClick={() => setShowHint(true)}
+          className="mt-6 sm:mt-8 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 active:bg-purple-700 transition-colors text-sm sm:text-base"
+        >
+          Show Hint
+        </button>
+      </div>
+
+      {showSpinWheel && (
+        <SpinWheel 
+          word={word} 
+          onHintRevealed={() => setShowSpinWheel(false)} 
+        />
+      )}
+
+      {showHint && (
+        <HintModal 
+          word={word}
+          onClose={() => setShowHint(false)}
+        />
+      )}
 
       {isComplete && <Celebration />}
       <Judge isComplete={isComplete} remainingGuesses={remainingGuesses} />
