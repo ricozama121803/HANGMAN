@@ -2,13 +2,13 @@
 
 export default function Keyboard({ onGuess, guessedLetters, disabled }) {
   return (
-    <div className="grid grid-cols-7 gap-2">
+    <div className="grid grid-cols-6 gap-4">
       {Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').map((letter) => (
         <button
           key={letter}
           onClick={() => onGuess(letter)}
           disabled={disabled || guessedLetters.includes(letter)}
-          className="p-2 border rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-4 border rounded hover:bg-gray-100 disabled:opacity-10 disabled:cursor-not-allowed"
         >
           {letter}
         </button>
